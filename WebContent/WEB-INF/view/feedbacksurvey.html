@@ -8,66 +8,122 @@
 		<link href="css/style.css" rel="stylesheet" />
 		<link href="css/weui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/frozen.css">
-		<link rel="stylesheet" href="css/icon.css">
 		<script src="js/jquery-3.2.1.min.js"></script>
 		<script src="js/weui.min.js"></script>
 		<script src="js/zepto.min.js"></script>
 	</head>
 
 	<body>
-
-		<form id="feedbackinfo" method="post">
-
+		<form id="signupservey" method="post">
 			<header class="ui-header ui-header-positive ui-border-b">
+				
 				<i class="ui-icon-return" onclick="history.back()"></i>
 				
 				<div class="ui-row">
- 					<div class="ui-col ui-col-80"><h1>国庆免费试听活动-调查返回</h1></div>
+ 					<div class="ui-col ui-col-80"><h1>营销活动调查反馈</h1></div>
     				<div class="ui-col ui-col-20"><a href="javascript:gomarketingentry();"><div class="ui-badge-muted">回首页</div></a></div>		    			
     			</div>
-    			
+
 			</header>
 			<br />
-			<br />
 
-			<div class="weui-cells weui-cells_form">
-				<div class="weui-cell">
-					<div class="weui-cell__hd"><label class="weui-label">标题</label></div>
-					<div class="weui-cell__bd">
-						<input name="feedbackname" class="weui-input" type="text" value="产品反馈" />
+			<div class="page__bd">
+
+				<article class="weui-article">
+	
+					<div class="weui-cells weui-cells_form">
+
+						<div class="ui-row">
+ 							<div class="ui-col ui-col-80"><h5>参与调查后，以后有类似活动，将优先通知你</h5></div>
+    						<div class="ui-col ui-col-20"><a href="javascript:gobackmarktingindex();" class="weui-btn weui-btn_mini weui-btn_default">放弃</a></div>		    			
+    					</div>
+
 					</div>
-				</div>
+					
+					<div class="weui-cells weui-cells_form">
+		
+						<h3>请填写下面问题，并提交。。。。</h3>
+						
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
 
-				<div class="weui-cell">
-					<div class="weui-cell__hd"><label class="weui-label">内容</label></div>
-					<div class="weui-cell__bd">
-						<input name="feedbackcontent" class="weui-input" type="text" placeholder="反馈内容" />
+
 					</div>
-				</div>
+					<div id="searchresult"></div>
+					<br />
+	
+				</article>
 
-				<div class="weui-cell">
-					<div class="weui-cell__hd"><label for="" class="weui-label">提出时间</label></div>
-					<div class="weui-cell__bd">
-						<input name="feedbacktime" class="weui-input" type="date" />
-						<script language="JavaScript">
-							today = new Date();
-							feedbackinfo.feedbacktime.value = today.getYear() + '年' + today.getMonth() + '月' + today.getDay() + '日';
-						</script>
-					</div>
-				</div>
 
+				<div class="weui-cell weui-cell_vcode">
+					<div id="searchresult"></div>
+				</div>
+				
 			</div>
-			<br />
-
-			<div class="page__bd page__bd_spacing">
-				<div class="button-sp-area">
-					<a class="page-btn page-btn_primary" href="javascript:setfeedbackinfo();">新增</a>
-					<input type="hidden" id="memberid" value="1" />
-				</div>
-			</div>
-
 		</form>
+
+		<div class="page__bd page__bd_spacing">
+			<div class="page-btn-area">
+				<a class="page-btn page-btn_primary" href="javascript:gobackmarktingindex()">提交</a>
+					<input type="hidden" id="followid" name="followid" value="1" />
+					<input type="hidden" id="membertel" name="membertel" value="2" />
+			</div>
+		</div>
+
+		
+
+		<div class="weui-footer">
+			<br />
+			<br />
+			<p class="weui-footer__links">
+				<a href="javascript:;" class="weui-footer__link">关于我们</a>
+			</p>
+			<p class="weui-footer__text">Copyright &copy; 2007-2017 XXXXX</p>
+		</div>
+
+
 		<script type="text/javascript">
+			//提交问卷后，返回本次活动首页
+			function gobackmarktingindex() {
+
+				$.ajax({
+					type: 'get',
+					url: 'marketingindex',
+					cache: false,
+					async: false,
+					dataType: 'json',
+					　　　　　　contentType: 'application/json',
+					success: function(data) {
+						window.location.href = 'marketingindex';
+					},
+					error: function(data) {
+						alert(data.msg);
+					}
+				});
+			}		
+			//提交问卷后，返回本次活动首页
+			function gobackmarktingindex() {
+
+				$.ajax({
+					type: 'get',
+					url: 'marketingindex',
+					cache: false,
+					async: false,
+					dataType: 'json',
+					　　　　　　contentType: 'application/json',
+					success: function(data) {
+						window.location.href = 'marketingindex';
+					},
+					error: function(data) {
+						alert(data.msg);
+					}
+				});
+			}	
 			//返回营销活动入口
 			function gomarketingentry() {
 
@@ -88,7 +144,6 @@
 			}
 			
 		</script>
-
 	</body>
 
 </html>

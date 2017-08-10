@@ -58,8 +58,16 @@ public class MarketingMgmtController {
 	public String redirectFeedbacksurvey(){	
 		return "feedbacksurvey";
 	}
-	
-	
+	//进入报名调查页面
+	@RequestMapping(value="signupsurvey", method = RequestMethod.GET)
+	public String redirectSignupsurvey(){	
+		return "signupsurvey";
+	}
+	//进入取消报名页面
+	@RequestMapping(value="signupcancel", method = RequestMethod.GET)
+	public String redirectSignupcancel(){	
+		return "signupcancel";
+	}
 	
 	
 	
@@ -68,14 +76,7 @@ public class MarketingMgmtController {
 	public String redirectMypromotion(){	
 		return "mypromotion";
 	}
-	
 
-
-	
-	@RequestMapping(value="msg_success", method = RequestMethod.GET)
-	public String redirectMsg_success(){	
-		return "msg_success";
-	}
 	
 	@RequestMapping(value="childinfoadd", method = RequestMethod.GET)
 	public String redirectChildinfoadd(){	
