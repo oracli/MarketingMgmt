@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>新增小孩</title>
+		<title>营销活动</title>
 		<link href="css/style.css" rel="stylesheet" />
 		<link href="css/weui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/frozen.css">
@@ -14,113 +14,152 @@
 	</head>
 
 	<body>
-
-		<form id="childinfoadd" method="post">
+	    <form id="marketingindex" method="post">
 			<header class="ui-header ui-header-positive ui-border-b">
-				<h1>新增小孩</h1><button class="ui-btn" onclick="history.back()">回首页</button>
+				<h1>国庆免费试听活动</h1>
 			</header>
 			<br />
 			<br />
-
-			<div class="weui-cells weui-cells_form">
-				<div class="weui-cell">
-					<div class="weui-cell__hd"><label class="weui-label">小孩昵称</label></div>
-					<div class="weui-cell__bd">
-						<input  name="childname" class="weui-input" type="text" placeholder="昵称" />
+	
+			<div class="page__bd">
+	
+				<div class="page">
+					<br />
+					<br />
+					<br />
+					
+					<div class="weui-grids">
+							
+						<a href="javascript:marketingsignup();" class="weui-grid">
+							<div class="weui-grid__icon">
+								<img src="./images/frame_64.png" alt="">
+							</div>
+							<p class="weui-grid__label">活动报名</p>
+						</a>
+						
+						<a href="javascript:signinpage();" class="weui-grid">
+							<div class="weui-grid__icon">
+								<img src="./images/flag_64.png" alt="">
+							</div>
+							<p class="weui-grid__label">签到</p>
+						</a>
+						
+						<a href="javascript:feedbacksurvey();" class="weui-grid">
+							<div class="weui-grid__icon">
+								<img src="./images/gear_64.png" alt="">
+							</div>
+							<p class="weui-grid__label">调查反馈</p>
+						</a>
+						
 					</div>
 				</div>
-				
-				<div class="weui-cell weui-cell_vcode">
-					<div class="weui-cell__hd">
-						<label class="weui-label">小孩性别</label>
-					</div>
-					<div class="weui-cell__bd">
-						<select class="weui-select" name="childsex">
-							<option value="L1">女生</option>
-							<option value="L2">男生</option>
-						</select>
-					</div>
-				</div>
-				
-				<div class="weui-cell">
-					<div class="weui-cell__hd"><label for="" class="weui-label">小孩生日</label></div>
-					<div class="weui-cell__bd">
-						<input name="childbird" class="weui-input" type="date" value="" />
-					</div>
-				</div>
-				
-				<div class="weui-cell weui-cell_vcode">
-					<div class="weui-cell__hd"><label class="weui-label">英文水平</label></div>
-					<div class="weui-cell__bd">
-						<select class="weui-select" name="childeng">
-							<option value="L1">未学</option>
-							<option value="L2">初级</option>
-							<option value="L3">中级</option>
-							<option value="L4">高级</option>
-						</select>
-					</div>
-				</div>
+	
 			</div>
-
-			<div class="page__bd page__bd_spacing">
-				<div class="page-btn-area">
-					<a class="page-btn page-btn_primary" href="javascript:setchildinfo();">新增</a>
-					<input type="hidden" id="memberid" name="memberid1" value="1" />
-				</div>
+	
+			<div class="page__bd">
+				<br />
+				<br />
+				<br />
+				<article class="weui-article">
+	
+					<div class="page__bd page__bd_spacing">
+						<div class="page-btn-area">
+							<a class="page-btn page-btn_primary" href="javascript:gomarketingentry();">返回营销活动首页</a>
+							<input type="hidden" id="followid" value="1" />
+							<input type="hidden" id="membertel" value="2" />
+						</div>
+					</div>
+					
+				</article>
 			</div>
-
+	
+			<div class="weui-footer">
+				<br />
+				<br />
+				<p class="weui-footer__links">
+					<a href="javascript:;" class="weui-footer__link">关于我们</a>
+				</p>
+				<p class="weui-footer__text">Copyright &copy; 2007-2017 XXXXX</p>
+			</div>
+		
 		</form>
-
+		
+		
 		<script type="text/javascript">
-			$.fn.serializeObject = function() {
-				var o = {};
-				var a = this.serializeArray();
-				$.each(a, function() {
-					if(o[this.name]) {
-						if(!o[this.name].push) {
-							o[this.name] = [o[this.name]];
-						}
-						o[this.name].push(this.value || '');
-					} else {
-						o[this.name] = this.value || '';
-					}
-				});
-				return o;
-			};
+			//活动报名
+			function marketingsignup() {
 
-			function setchildinfo() {
-
-				var formdata = $('#childinfoadd').serializeObject();
-				//alert(formdata);							
 				$.ajax({
-					type: 'post',
-					url: 'setchildinfo',
+					type: 'get',
+					url: 'marketingsignup',
 					cache: false,
+					async: false,
 					dataType: 'json',
-					data: JSON.stringify(formdata),
-					contentType: 'application/json',
-					　　　　　　async: false,
+					　　　　　　contentType: 'application/json',
 					success: function(data) {
-						var result = JSON.stringify(data);
-						alert('success:' + result);
+						window.location.href = 'marketingsignup';
 					},
 					error: function(data) {
-						alert('failed:' + data.msg);
+						alert(data.msg);
+					}
+				});
+			}		
+			//签到
+			function signinpage() {
+
+				$.ajax({
+					type: 'get',
+					url: 'signinpage',
+					cache: false,
+					async: false,
+					dataType: 'json',
+					　　　　　　contentType: 'application/json',
+					success: function(data) {
+						window.location.href = 'signinpage';
+					},
+					error: function(data) {
+						alert(data.msg);
+					}
+				});
+			}
+			//调查反馈
+			function feedbacksurvey() {
+
+				$.ajax({
+					type: 'get',
+					url: 'feedbacksurvey',
+					cache: false,
+					async: false,
+					dataType: 'json',
+					　　　　　　contentType: 'application/json',
+					success: function(data) {
+						window.location.href = 'feedbacksurvey';
+					},
+					error: function(data) {
+						alert(data.msg);
+					}
+				});
+			}			
+			//返回营销活动入口
+			function gomarketingentry() {
+
+				$.ajax({
+					type: 'get',
+					url: 'marketingentry',
+					cache: false,
+					async: false,
+					dataType: 'json',
+					　　　　　　contentType: 'application/json',
+					success: function(data) {
+						window.location.href = 'marketingentry';
+					},
+					error: function(data) {
+						alert(data.msg);
 					}
 				});
 			}
 			
-			jQuery.getUrlParam = function (name) {
-     			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-     			var r = window.location.search.substr(1).match(reg);
-     			if (r != null) return unescape(r[2]); return null;
-			}  
-			
-			$(document).ready(function() {
-				
-				$("#memberid").val($.getUrlParam('mbid'));
-				
-			});
+
 		</script>
 	</body>
 

@@ -4,14 +4,14 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<title>新增产品意见反馈</title>
+		<title>营销活动调查反馈</title>
 		<link href="css/style.css" rel="stylesheet" />
 		<link href="css/weui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/frozen.css">
+		<link rel="stylesheet" href="css/icon.css">
 		<script src="js/jquery-3.2.1.min.js"></script>
 		<script src="js/weui.min.js"></script>
 		<script src="js/zepto.min.js"></script>
-		<script src="js/func.js"></script>
 	</head>
 
 	<body>
@@ -19,7 +19,13 @@
 		<form id="feedbackinfo" method="post">
 
 			<header class="ui-header ui-header-positive ui-border-b">
-				<h1>新增产品意见反馈</h1><button class="ui-btn" onclick="history.back()">回首页</button>
+				<i class="ui-icon-return" onclick="history.back()"></i>
+				
+				<div class="ui-row">
+ 					<div class="ui-col ui-col-80"><h1>国庆免费试听活动-调查返回</h1></div>
+    				<div class="ui-col ui-col-20"><a href="javascript:gomarketingentry();"><div class="ui-badge-muted">回首页</div></a></div>		    			
+    			</div>
+    			
 			</header>
 			<br />
 			<br />
@@ -52,71 +58,35 @@
 
 			</div>
 			<br />
-			
-				<div class="weui-cell">
-					<div class="weui-cell__bd">
-						<input name="testpurchase" class="weui-input" type="text" placeholder="输入测试用产品订购" />
-					</div>
-				</div>
 
 			<div class="page__bd page__bd_spacing">
 				<div class="button-sp-area">
 					<a class="page-btn page-btn_primary" href="javascript:setfeedbackinfo();">新增</a>
-					<input type="hidden" id="purchaseid1" name="purchaseid" value="1" />
+					<input type="hidden" id="memberid" value="1" />
 				</div>
 			</div>
 
 		</form>
 		<script type="text/javascript">
-			$.fn.serializeObject = function() {
-				var o = {};
-				var a = this.serializeArray();
-				$.each(a, function() {
-					if(o[this.name]) {
-						if(!o[this.name].push) {
-							o[this.name] = [o[this.name]];
-						}
-						o[this.name].push(this.value || '');
-					} else {
-						o[this.name] = this.value || '';
-					}
-				});
-				return o;
-			};
+			//返回营销活动入口
+			function gomarketingentry() {
 
-			function setfeedbackinfo() {
-
-				var formdata = $('#feedbackinfo').serializeObject();
-											
 				$.ajax({
-					type: 'post',
-					url: 'setfeedbackinfo',
+					type: 'get',
+					url: 'marketingentry',
 					cache: false,
+					async: false,
 					dataType: 'json',
-					data: JSON.stringify(formdata),
-					contentType: 'application/json',
-					　　　　　　async: false,
+					　　　　　　contentType: 'application/json',
 					success: function(data) {
-						var result = JSON.stringify(data);
-						alert('success:' + result);
+						window.location.href = 'marketingentry';
 					},
 					error: function(data) {
-						alert('failed:' + data.msg);
+						alert(data.msg);
 					}
 				});
 			}
 			
-			jQuery.getUrlParam = function (name) {
-     			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-     			var r = window.location.search.substr(1).match(reg);
-     			if (r != null) return unescape(r[2]); return null;
-			}  
-			
-			$(document).ready(function() {
-				
-				$("#purchaseid1").val($.getUrlParam('purid'));
-				
-			});				
 		</script>
 
 	</body>

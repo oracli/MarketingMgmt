@@ -33,33 +33,44 @@ public class MarketingMgmtController {
 	
 	@Autowired
 	MarketingMgmtService memberService;
-	
-	@RequestMapping(value="memberregister", method = RequestMethod.GET)
-	public String redirectMemberregister(){		
-		return "memberregister";
+	//营销活动入口
+	@RequestMapping(value="marketingentry", method = RequestMethod.GET)
+	public String redirectGomarketingentry(){		
+		return "marketingentry";
+	}	
+	//活动首页
+	@RequestMapping(value="marketingindex", method = RequestMethod.GET)
+	public String redirectMarketingindex(){	
+		return "marketingindex";
+	}
+	//活动报名
+	@RequestMapping(value="marketingsignup", method = RequestMethod.GET)
+	public String redirectMarketingsignup(){		
+		return "marketingsignup";
+	}
+	//签到
+	@RequestMapping(value="signinpage", method = RequestMethod.GET)
+	public String redirectSigninpage(){	
+		return "signinpage";
+	}
+	//调查反馈
+	@RequestMapping(value="feedbacksurvey", method = RequestMethod.GET)
+	public String redirectFeedbacksurvey(){	
+		return "feedbacksurvey";
 	}
 	
 	
-	@RequestMapping(value="memberinfo", method = RequestMethod.GET)
-	public String redirectMemberinfo(){	
-		return "memberinfo";
-	}
-
+	
+	
+	
+	/////////////////////////////////////backup
 	@RequestMapping(value="mypromotion", method = RequestMethod.GET)
 	public String redirectMypromotion(){	
 		return "mypromotion";
 	}
 	
-	
-	@RequestMapping(value="register", method = RequestMethod.GET)
-	public String redirectRegister(){		
-		return "register";
-	}
 
-	@RequestMapping(value="childrenlist", method = RequestMethod.GET)
-	public String redirectChildrenlist(){	
-		return "childrenlist";
-	}
+
 	
 	@RequestMapping(value="msg_success", method = RequestMethod.GET)
 	public String redirectMsg_success(){	
