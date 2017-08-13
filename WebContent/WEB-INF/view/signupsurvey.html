@@ -11,10 +11,11 @@
 		<script src="js/jquery-3.2.1.min.js"></script>
 		<script src="js/weui.min.js"></script>
 		<script src="js/zepto.min.js"></script>
+		<script src="js/func.js"></script>
 	</head>
 
 	<body>
-		<form id="signupservey" method="post">
+		<form id="survey" method="post" action="submitSurvey">
 			<header class="ui-header ui-header-positive ui-border-b">
 				
 				<i class="ui-icon-return" onclick="history.back()"></i>
@@ -43,39 +44,26 @@
 					<div class="weui-cells weui-cells_form">
 		
 						<h3>请填写下面问题，并提交。。。。</h3>
-						
 						<br />
-						<br />
-						<br />
-						<br />
-						<br />
-						<br />
-						<br />
-
-
 					</div>
-					<div id="searchresult"></div>
-					<br />
+					
+					<input type="hidden" id="surveyid" value="a8623f48-5642-7273-fa8a-5987da775c2d"/>		
+						<div id="searchresult">
+						</div>
 	
 				</article>
-
-
-				<div class="weui-cell weui-cell_vcode">
-					<div id="searchresult"></div>
-				</div>
 				
 			</div>
-		</form>
-
-		<div class="page__bd page__bd_spacing">
-			<div class="page-btn-area">
-				<a class="page-btn page-btn_primary" href="javascript:gobackmarktingindex()">提交</a>
-					<input type="hidden" id="followid" name="followid" value="1" />
-					<input type="hidden" id="membertel" name="membertel" value="2" />
-			</div>
-		</div>
-
 		
+
+			<div class="page__bd page__bd_spacing">
+				<div class="page-btn-area">
+					<a class="page-btn page-btn_primary" href="javascript:submitSurvey();">提交</a>
+						<input type="hidden" id="followid" name="followid" value="1" />
+						<input type="hidden" id="membertel" name="membertel" value="2" />
+				</div>
+			</div>
+		</form>
 
 		<div class="weui-footer">
 			<br />
@@ -85,7 +73,33 @@
 			</p>
 			<p class="weui-footer__text">Copyright &copy; 2007-2017 XXXXX</p>
 		</div>
-
+	
+	
+		<script type="text/html" id="question-header">			
+			<div class="page-hd">
+				<p class="page-title"><#= name #></p>
+				<input type="hidden" name = "sid" value = "<#= id #>"/>
+			</div>			
+		</script>
+		<script type="text/html" id="question-list">
+			<div class="weui-cell__hd">
+				<p><#= name #></p>
+				<input type="hidden" name="<#= qtag #>" value = "<#= id #>"/>
+			</div>	
+		</script>
+		<script type="text/html" id="option-list">
+			<div class="weui-cells weui-cells_radio">
+            	<label class="weui-cell weui-check__label" for="<#= id #>">
+                	<div class="weui-cell__bd">
+                    	<p><#= name #></p>
+                	</div>
+                	<div class="weui-cell__ft">
+                    	<input type="radio" name ="<#= tag #>" id="<#= id #>" value="<#= id #>"/>
+                    	<span class="weui-icon-checked"></span>
+                	</div>
+            	</label>            
+        	</div>
+		</script>
 
 		<script type="text/javascript">
 			//提交问卷后，返回本次活动首页
@@ -142,6 +156,64 @@
 					}
 				});
 			}
+			
+			//初始化页面
+			function getSurvey(){
+				var surveyid = document.getElementById('surveyid').value;
+				var params = {id: surveyid};
+				
+				$.ajax({  
+			        type: 'get',  
+			        url: 'getQuestionnaire',
+			        cache: false,
+			        dataType : 'json',
+			        data: params,
+			　　　　　　 	contentType : 'application/json', 
+			　　　　　　 	async: false,
+			        success: function (data) { 				        				        	
+			        	var htmllist = parseQATemplate(data);			        	
+			        	$('#searchresult').html(htmllist);			        				        	
+			        },  
+			        error: function (data) { 		        	
+			        	alert('failed:' + data.msg);
+			        }  
+			    });
+			}
+			
+			function parseQATemplate(data){
+				var err = "";
+				var resultHtml = ""; 
+				try{
+					resultHtml = $('#question-header').parseTemplate(data);
+					var i = 1;
+					data.questions.forEach(function(object) {
+						object.qtag = 'qid_' + i;
+						resultHtml += $('#question-list').parseTemplate(object);
+						object.options.forEach(function(item){
+							item.tag = object.id;
+							resultHtml += $('#option-list').parseTemplate(item);
+						});
+						i ++;
+					});
+					return resultHtml;
+				}catch(e){
+					err = e.message;
+				}
+				return "< # ERROR: " + err.toString() + " # >";
+			};
+			
+			$(document).ready(function() {
+				
+				//$("#memberid").val($.getUrlParam('mdid'));
+
+				getSurvey();
+			});			
+			
+			//回写答案
+			function submitSurvey(){
+				
+				$('#survey').submit();
+			}			
 			
 		</script>
 	</body>

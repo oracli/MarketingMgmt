@@ -5,6 +5,7 @@ import com.bp.wei.model.Followerinfo;
 import com.bp.wei.model.Member;
 import com.bp.wei.model.Memberinfo;
 import com.bp.wei.model.MemberinfoWithBLOBs;
+import com.bp.wei.model.Questionnaire;
 
 public interface MarketingMgmtService {
 	
@@ -28,5 +29,6 @@ public interface MarketingMgmtService {
 	Member getMemberById(int memberId);
 	int setMember(Member member);
 	
+	Questionnaire getQuestionnaireById(String id);
 	
 }
