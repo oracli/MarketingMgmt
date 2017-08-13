@@ -22,6 +22,7 @@ import com.bp.wei.model.Member;
 import com.bp.wei.model.Memberinfo;
 import com.bp.wei.model.MemberinfoWithBLOBs;
 import com.bp.wei.model.Followerinfo;
+import com.bp.wei.model.Questionnaire;
 import com.bp.wei.service.MarketingMgmtService;
 
 import net.sf.json.JSONObject;
@@ -68,6 +69,57 @@ public class MarketingMgmtController {
 	public String redirectSignupcancel(){	
 		return "signupcancel";
 	}
+	
+	
+	
+	@RequestMapping(value="getQuestionnaire", method = RequestMethod.GET)
+	public @ResponseBody Questionnaire getQuestionnaire(String id){
+		if(id == null || id.length() <= 0){
+			log.error("Invalid questionnaire id from UI.");
+			return null;
+		}
+		Questionnaire result = memberService.getQuestionnaireById(id);
+		if(result == null){
+			log.error("No questionnaire definition.");
+			return null;
+		}
+		System.out.println("@@@@@@@@@@@result: " + result.toString());
+		return result;
+	}
+	
+	@RequestMapping(value="submitSurvey", method = RequestMethod.POST)
+	public ModelAndView submitSurvey(HttpServletRequest request){	
+		log.debug("setSurveryResult start...");
+		String surveryId = request.getParameter("sid");
+		System.out.println("survery id: " + surveryId);
+		int i = 1;
+		boolean hasnext = true;
+		while(hasnext){
+			String questionId = request.getParameter("qid_" + i);
+			System.out.println("question id: " + questionId);
+			if(questionId != null && questionId.length() > 0){
+				String answer = request.getParameter(questionId);
+				System.out.println("answer id: " + answer);
+				i ++;
+			}else{
+				hasnext = false;
+			}
+		}
+		ModelAndView result = new ModelAndView();
+		
+		result.setViewName("msg_success");		
+			
+		return result;
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
