@@ -1,12 +1,9 @@
 package com.bp.wei.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bp.wei.model.Marketing;
 import com.bp.wei.model.Member;
-import com.bp.wei.model.Memberinfo;
 import com.bp.wei.model.MemberinfoWithBLOBs;
 import com.bp.wei.model.Followerinfo;
 import com.bp.wei.model.Questionnaire;
@@ -70,8 +67,19 @@ public class MarketingMgmtController {
 		return "signupcancel";
 	}
 	
+	//获得在用的营销活动
+	@RequestMapping(value="getMarketinglist", method = RequestMethod.GET)
+	public @ResponseBody Marketing findMarketinglist(){
+		
+		Marketing result = memberService.getMarketinglist();
+		
+		System.out.println("@@@@@@@@@@@result: " + result.toString());
+		
+		return result;
+		
+	}
 	
-	
+	//获取问题列表
 	@RequestMapping(value="getQuestionnaire", method = RequestMethod.GET)
 	public @ResponseBody Questionnaire getQuestionnaire(String id){
 		if(id == null || id.length() <= 0){
@@ -87,6 +95,7 @@ public class MarketingMgmtController {
 		return result;
 	}
 	
+	//提交答案
 	@RequestMapping(value="submitSurvey", method = RequestMethod.POST)
 	public ModelAndView submitSurvey(HttpServletRequest request){	
 		log.debug("setSurveryResult start...");

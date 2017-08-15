@@ -2,12 +2,21 @@ package com.bp.wei.service;
 
 
 import com.bp.wei.model.Followerinfo;
+import com.bp.wei.model.Marketing;
 import com.bp.wei.model.Member;
 import com.bp.wei.model.Memberinfo;
 import com.bp.wei.model.MemberinfoWithBLOBs;
 import com.bp.wei.model.Questionnaire;
 
 public interface MarketingMgmtService {
+	
+	
+	Questionnaire getQuestionnaireById(String id);
+	
+	Marketing getMarketinglist();
+	
+	
+	
 	
 	///////////////////for follower
 	//search myfollower
@@ -28,7 +37,5 @@ public interface MarketingMgmtService {
 	//for examples
 	Member getMemberById(int memberId);
 	int setMember(Member member);
-	
-	Questionnaire getQuestionnaireById(String id);
 	
 }
