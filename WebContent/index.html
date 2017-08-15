@@ -11,6 +11,7 @@
 		<script src="js/jquery-3.2.1.min.js"></script>
 		<script src="js/weui.min.js"></script>
 		<script src="js/zepto.min.js"></script>
+		<script src="js/func.js"></script>
 	</head>
 
 	<body>
@@ -24,18 +25,11 @@
 
 			<div class="weui-cells__title">请选择你要参与的体验活动</div>
 			<div class="weui-cells">
-				<a class="weui-cell weui-cell_access" href="javascript:openmarketing(1);">
-					<span class="weui-cell__bd">
-						<p>国庆免费试听活动</p>
-					</span>
-					<span class="weui-cell__ft">点击进入</span>
-				</a>
-				<a class="weui-cell weui-cell_access" href="javascript:openmarketing(2);">
-					<span class="weui-cell__bd">
-						<p>留学指导活动第二期</p>
-					</span>
-					<span class="weui-cell__ft">点击进入</span>
-				</a>
+			
+				<div class="weui-cells">
+	        		<div id="searchresult"> 
+		       		</div>
+		       	</div>
 	
 			</div>
 			
@@ -76,11 +70,23 @@
 			</div>
 
 		</form>
+		
+		<script id="marketing-template" type="text/html">
+			 <a class="weui-cell weui-cell_access" href="javascript:openmarketing('<#= id #>');">
+	                <div class="weui-cell__hd"><img src="./images/Users_favico.png"  alt="" style="width:20px;margin-right:5px;display:block"></div>
+	                <div class="weui-cell__bd">
+	                    <p><#= name #></p>
+	                </div>
+	                <div class="weui-cell__ft">点击进入</div>
+	         </a>				
+		</script>		
 	
 		<script type="text/javascript">
 			
 			//for open page
 			function openmarketing(id) {
+			
+				alert(id);
 
 				$.ajax({
 					type: 'get',
@@ -90,13 +96,54 @@
 					dataType: 'json',
 					　　　　　　contentType: 'application/json',
 					success: function(data) {
-						window.location.href = 'marketingindex';
+						window.location.href = 'marketingindex.html?mkid=' + id;
 					},
 					error: function(data) {
 						alert(data.msg);
 					}
 				});
 			}
+			
+			//获得在用的营销活动
+        	function getMarketinglist(){
+				$.ajax({  
+			        type: 'get',  
+			        url: 'getMarketinglist',
+			        cache: false,
+			        dataType : 'json',
+			        data: {"1":"1"},
+			　　　　　　 	contentType : 'application/json', 
+			　　　　　　 	async: false,
+			        success: function (data) { 	
+			        	var result= JSON.stringify(data);
+			        	
+			        	var htmllist = '';
+			        	
+			        	data.marketinglist.forEach(function(object) {			        		
+			        		var output = $('#marketing-template').parseTemplate(object);			        		
+			        		htmllist += output;
+			        	});
+			        	
+			        	$('#searchresult').html(htmllist); 
+			        				        	
+			        },  
+			        error: function (data) { 		        	
+			        	alert('failed:' + data.msg);
+			        }  
+			    });
+			}
+        					
+			jQuery.getUrlParam = function (name) {
+     			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+     			var r = window.location.search.substr(1).match(reg);
+     			if (r != null) return unescape(r[2]); return null;
+			}  
+						
+			$(document).ready(function() {
+				
+				getMarketinglist();
+				
+			});			
 
 		</script>
 	</body>

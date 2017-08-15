@@ -6,12 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.bp.wei.dao.MarketingDao;
 import com.bp.wei.dao.MemberDao;
 import com.bp.wei.dao.MemberinfoDao;
 import com.bp.wei.dao.FollowerinfoDao;
 import com.bp.wei.dao.MemberToFollowerDao;
 import com.bp.wei.dao.QuestionnaireDao;
 import com.bp.wei.model.Followerinfo;
+import com.bp.wei.model.Marketing;
 import com.bp.wei.model.Member;
 import com.bp.wei.model.MemberToFollower;
 import com.bp.wei.model.Memberinfo;
@@ -36,6 +38,41 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 	
 	@Resource
 	private QuestionnaireDao qDao;
+	
+	@Resource
+	private MarketingDao mkDao;
+	
+	
+	@Override
+	public int setMember(Member member) {
+		int result = dao.insertSelective(member);
+		return result;
+	}
+	
+	@Override
+	public Questionnaire getQuestionnaireById(String id) {
+		if(id == null || id.length() <= 0){
+			log.error("Invalid questionnaire id： " + id);
+			return null;
+		}
+		Questionnaire questionnaire = qDao.selectByPrimaryKeyWithQA(id);
+		if(questionnaire == null){
+			log.error("Questionnaire with id :" + id + " does not exist.");
+		}
+		return questionnaire;
+	}	
+
+	//search
+	@Override
+	public Marketing getMarketinglist() {
+		Marketing marketing = mkDao.selecAllMarketingList();
+		System.out.println("@@@@@@@@@@@@@@marketing : " + marketing.getId());
+		return marketing;
+	}
+	
+	
+	
+	
 	
 	////////////////for follower
 	//myfollower
@@ -120,24 +157,5 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 		Member member = dao.selectByPrimaryKey(new Integer(memberId));
 		return member;
 	}
-
-	@Override
-	public int setMember(Member member) {
-		int result = dao.insertSelective(member);
-		return result;
-	}
-	
-	@Override
-	public Questionnaire getQuestionnaireById(String id) {
-		if(id == null || id.length() <= 0){
-			log.error("Invalid questionnaire id： " + id);
-			return null;
-		}
-		Questionnaire questionnaire = qDao.selectByPrimaryKeyWithQA(id);
-		if(questionnaire == null){
-			log.error("Questionnaire with id :" + id + " does not exist.");
-		}
-		return questionnaire;
-	}	
 
 }
