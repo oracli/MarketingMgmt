@@ -2,7 +2,8 @@ package com.bp.wei.service;
 
 
 import com.bp.wei.model.Followerinfo;
-import com.bp.wei.model.Marketing;
+import com.bp.wei.model.Marketinginfo;
+import com.bp.wei.model.MarketinginfoWithBLOBs;
 import com.bp.wei.model.Member;
 import com.bp.wei.model.Memberinfo;
 import com.bp.wei.model.MemberinfoWithBLOBs;
@@ -10,11 +11,11 @@ import com.bp.wei.model.Questionnaire;
 
 public interface MarketingMgmtService {
 	
+	Marketinginfo getMarketinglist();
+	
+	MarketinginfoWithBLOBs getMarketing(String id);
 	
 	Questionnaire getQuestionnaireById(String id);
-	
-	Marketing getMarketinglist();
-	
 	
 	
 	

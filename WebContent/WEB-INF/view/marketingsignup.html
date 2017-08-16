@@ -11,6 +11,7 @@
 		<script src="js/jquery-3.2.1.min.js"></script>
 		<script src="js/weui.min.js"></script>
 		<script src="js/zepto.min.js"></script>
+		<script src="js/func.js"></script>
 	</head>
 
 	<body>
@@ -22,26 +23,20 @@
 				<i class="ui-icon-return" onclick="history.back()"></i>
 				
 				<div class="ui-row">
- 					<div class="ui-col ui-col-80"><h1>国庆免费试听活动 - 活动报名</h1></div>
+ 					<div class="ui-col ui-col-80"><h1><input readonly="readonly" id="membertel" style="border:0; background:none; color:#999; vertical-align:middle;" value="国庆免费试听活动" /></h1></div>
     				<div class="ui-col ui-col-20"><a href="javascript:gomarketingentry();"><div class="ui-badge-muted">回首页</div></a></div>		    			
     			</div>
-
+	
 			</header>
-			<br />
 			<br />
 			
 			<article class="weui-article">
 
 				<div class="weui-cells weui-cells_form">
+					
+					<textarea id="descsignup_id" name="descsignup_nm" cols="50" rows="4" readonly="readonly" style= "background:transparent;border-style:none; resize: none;"></textarea>
+			
 	
-					<h3>本次营销活动介绍：XXXXXXXXXXXXXX</h3>
-					<h3>时间安排：XXXXXXXXXXXXXX</h3>
-					<h3>地点：XXXXXXXXXXXXXX</h3>
-					
-					<div id="searchresult"></div>
-					<br />
-					
-					
 				</div>
 
 			</article>
@@ -51,6 +46,7 @@
 					<a class="page-btn page-btn_primary" href="javascript:gosignupsurvey();">我要报名</a>
 					<br />
 					<a class="page-btn page-btn_default" href="javascript:gosignupcancel();">取消报名</a>
+					<input type="hidden" id="mkid" value="1" />
 					<input type="hidden" id="cdid" value="1" />
 				</div>
 			</div>
@@ -66,9 +62,105 @@
 			<p class="weui-footer__text">Copyright &copy; 2007-2017 XXXXX</p>
 		</div>
 
-		
 
 		<script type="text/javascript">
+		
+			//search data
+			$.fn.parseTemplate = function(data) {
+				var str = (this).html();
+				var _tmplCache = {}
+				var err = "";
+				try {
+					var func = _tmplCache[str];
+					if(!func) {
+						var strFunc =
+							"var p=[],print=function(){p.push.apply(p,arguments);};" +
+							"with(obj){p.push('" +
+							str.replace(/[\r\t\n]/g, " ")
+							.replace(/'(?=[^#]*#>)/g, "\t")
+							.split("'").join("\\'")
+							.split("\t").join("'")
+							.replace(/<#=(.+?)#>/g, "',$1,'")
+							.split("<#").join("');")
+							.split("#>").join("p.push('") +
+							"');}return p.join('');";
+						func = new Function("obj", strFunc);
+						_tmplCache[str] = func;
+					}
+					return func(data);
+				} catch(e) {
+					err = e.message;
+				}
+				return "< # ERROR: " + err.toString() + " # >";
+			};
+
+			function getmarketing() {
+				var marketingid = document.getElementById('mkid').value;
+				var params = {
+					id: marketingid
+				};
+
+				$.ajax({
+					type: 'get',
+					url: 'getmarketing',
+					cache: false,
+					dataType: 'json',
+					data: params,
+					　　　　　　contentType: 'application/json',
+					　　　　　　async: false,
+					success: function(data) {
+					
+						$("#descsignup_id").val(data.descSignup);
+
+					},
+					error: function(data) {
+						alert('failed:' + data.msg);
+					}
+				});
+			}
+
+			$(function() {
+				var winH = $(window).height();
+				var categorySpace = 10;
+
+				$('.js_item').on('click', function() {
+					var id = $(this).data('id');
+					window.pageManager.go(id);
+				});
+				$('.js_category').on('click', function() {
+					var $this = $(this),
+						$inner = $this.next('.js_categoryInner'),
+						$page = $this.parents('.page'),
+						$parent = $(this).parent('li');
+					var innerH = $inner.data('height');
+					bear = $page;
+
+					if(!innerH) {
+						$inner.css('height', 'auto');
+						innerH = $inner.height();
+						$inner.removeAttr('style');
+						$inner.data('height', innerH);
+					}
+
+					if($parent.hasClass('js_show')) {
+						$parent.removeClass('js_show');
+					} else {
+						$parent.siblings().removeClass('js_show');
+
+						$parent.addClass('js_show');
+						if(this.offsetTop + this.offsetHeight + innerH > $page.scrollTop() + winH) {
+							var scrollTop = this.offsetTop + this.offsetHeight + innerH - winH + categorySpace;
+
+							if(scrollTop > this.offsetTop) {
+								scrollTop = this.offsetTop - categorySpace;
+							}
+
+							$page.scrollTop(scrollTop);
+						}
+					}
+				});
+			});
+					
 			//进入调查问卷页面
 			function gosignupsurvey() {
 
@@ -125,6 +217,18 @@
 				});
 			}
 
+			jQuery.getUrlParam = function (name) {
+     			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+     			var r = window.location.search.substr(1).match(reg);
+     			if (r != null) return unescape(r[2]); return null;
+			}  			
+			$(document).ready(function() {
+				
+				$("#mkid").val($.getUrlParam('mkid'));
+				
+				getmarketing();
+
+			});
 		</script>
 	</body>
 

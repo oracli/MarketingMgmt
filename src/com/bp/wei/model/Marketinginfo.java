@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-public class Marketing {
+public class Marketinginfo {
     private String id;
 
     private String name;
@@ -28,10 +28,8 @@ public class Marketing {
     private String marketSt;
 
     private BigDecimal marketFee;
-
-    private String description;
     
-    private List<Marketing> marketinglist;
+    private List<Marketinginfo> marketinglist;
 
     public String getId() {
         return id;
@@ -128,20 +126,12 @@ public class Marketing {
     public void setMarketFee(BigDecimal marketFee) {
         this.marketFee = marketFee;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
     
-	public List<Marketing> getMarketinglist() {
-		return marketinglist;
-	}
+ 	public List<Marketinginfo> getMarketinglist() {
+ 		return marketinglist;
+}
 
-	public void setMarketinglist(List<Marketing> marketinglist) {
-		this.marketinglist = marketinglist;
-	}    
+ 	public void setMarketinglist(List<Marketinginfo> marketinglist) {
+ 		this.marketinglist = marketinglist;
+}     
 }

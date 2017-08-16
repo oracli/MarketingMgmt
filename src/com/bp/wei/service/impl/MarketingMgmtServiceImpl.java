@@ -6,14 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.bp.wei.dao.MarketingDao;
+import com.bp.wei.dao.MarketinginfoDao;
 import com.bp.wei.dao.MemberDao;
 import com.bp.wei.dao.MemberinfoDao;
 import com.bp.wei.dao.FollowerinfoDao;
 import com.bp.wei.dao.MemberToFollowerDao;
 import com.bp.wei.dao.QuestionnaireDao;
 import com.bp.wei.model.Followerinfo;
-import com.bp.wei.model.Marketing;
+import com.bp.wei.model.Marketinginfo;
+import com.bp.wei.model.MarketinginfoWithBLOBs;
 import com.bp.wei.model.Member;
 import com.bp.wei.model.MemberToFollower;
 import com.bp.wei.model.Memberinfo;
@@ -40,15 +41,22 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 	private QuestionnaireDao qDao;
 	
 	@Resource
-	private MarketingDao mkDao;
+	private MarketinginfoDao mkDao;
 	
 	
+	//search
 	@Override
-	public int setMember(Member member) {
-		int result = dao.insertSelective(member);
-		return result;
+	public Marketinginfo getMarketinglist() {
+		Marketinginfo marketing = mkDao.selecAllMarketingList();
+		System.out.println("@@@@@@@@@@@@@@marketing : " + marketing.getId());
+		return marketing;
 	}
-	
+	@Override
+	public MarketinginfoWithBLOBs getMarketing(String id){
+		MarketinginfoWithBLOBs marketing = mkDao.selectMarketingInfo(id);
+		System.out.println("@@@@@@@@@@@@@@marketing : " + marketing.getId());
+		return marketing;
+	}
 	@Override
 	public Questionnaire getQuestionnaireById(String id) {
 		if(id == null || id.length() <= 0){
@@ -62,19 +70,26 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 		return questionnaire;
 	}	
 
-	//search
-	@Override
-	public Marketing getMarketinglist() {
-		Marketing marketing = mkDao.selecAllMarketingList();
-		System.out.println("@@@@@@@@@@@@@@marketing : " + marketing.getId());
-		return marketing;
-	}
+	
+	
+
+	
+	
+	
 	
 	
 	
 	
 	
 	////////////////for follower
+	
+	
+	@Override
+	public int setMember(Member member) {
+		int result = dao.insertSelective(member);
+		return result;
+	}
+	
 	//myfollower
 	public Followerinfo getFollowerlist(String id) {
 		Followerinfo followerinfo = fldao.selectMyFollowerListByKey(id);

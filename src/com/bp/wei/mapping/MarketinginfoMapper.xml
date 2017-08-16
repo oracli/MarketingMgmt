@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bp.wei.dao.MarketingDao">
-  <resultMap id="BaseResultMap" type="com.bp.wei.model.Marketing">
+<mapper namespace="com.bp.wei.dao.MarketinginfoDao">
+  <resultMap id="BaseResultMap" type="com.bp.wei.model.Marketinginfo">
     <id column="id" jdbcType="CHAR" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="date_entered" jdbcType="TIMESTAMP" property="dateEntered" />
@@ -15,27 +15,43 @@
     <result column="market_st" jdbcType="VARCHAR" property="marketSt" />
     <result column="market_fee" jdbcType="DECIMAL" property="marketFee" />
   </resultMap>
-  
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bp.wei.model.Marketing">
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bp.wei.model.MarketinginfoWithBLOBs">
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
+    <result column="desc_signup" jdbcType="LONGVARCHAR" property="descSignup" />
+    <result column="desc_survey" jdbcType="LONGVARCHAR" property="descSurvey" />
+    <result column="desc_present" jdbcType="LONGVARCHAR" property="descPresent" />
   </resultMap>
   
-    <resultMap id="ResultMapWithMarketingList" type="com.bp.wei.model.Marketing">
+  <resultMap id="ResultMapWithMarketingList" type="com.bp.wei.model.Marketinginfo">
   	<id property="id" column="mid"/>
   	<result property="name" column="mname"/>
-  	<collection property="marketinglist" javaType="java.util.List" ofType="com.bp.wei.model.Marketing">
+  	<collection property="marketinglist" javaType="java.util.List" ofType="com.bp.wei.model.Marketinginfo">
   		<id property="id" column="mkid"/>
   		<result property="name" column="mkname"/>
   	</collection>
   </resultMap>
   
   
+  <select id="selecAllMarketingList" resultMap="ResultMapWithMarketingList">
+    select '1', id mkid, name mkname
+    from ec1_marketing
+  </select>  
+  
+  <select id="selectMarketingInfo" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ec1_marketing
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
   <sql id="Base_Column_List">
     id, name, date_entered, date_modified, modified_user_id, created_by, deleted, assigned_user_id, 
     st_dt, ed_dt, market_st, market_fee
   </sql>
   <sql id="Blob_Column_List">
-    description
+    description, desc_signup, desc_survey, desc_present
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select 
@@ -45,29 +61,25 @@
     from ec1_marketing
     where id = #{id,jdbcType=CHAR}
   </select>
-  
-  <select id="selecAllMarketingList" resultMap="ResultMapWithMarketingList">
-    select '1', id mkid, name mkname
-    from ec1_marketing
-  </select>  
-  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from ec1_marketing
     where id = #{id,jdbcType=CHAR}
   </delete>
-  <insert id="insert" parameterType="com.bp.wei.model.Marketing">
+  <insert id="insert" parameterType="com.bp.wei.model.MarketinginfoWithBLOBs">
     insert into ec1_marketing (id, name, date_entered, 
       date_modified, modified_user_id, created_by, 
       deleted, assigned_user_id, st_dt, 
       ed_dt, market_st, market_fee, 
-      description)
+      description, desc_signup, desc_survey, 
+      desc_present)
     values (#{id,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{dateEntered,jdbcType=TIMESTAMP}, 
       #{dateModified,jdbcType=TIMESTAMP}, #{modifiedUserId,jdbcType=CHAR}, #{createdBy,jdbcType=CHAR}, 
       #{deleted,jdbcType=BIT}, #{assignedUserId,jdbcType=CHAR}, #{stDt,jdbcType=DATE}, 
       #{edDt,jdbcType=DATE}, #{marketSt,jdbcType=VARCHAR}, #{marketFee,jdbcType=DECIMAL}, 
-      #{description,jdbcType=LONGVARCHAR})
+      #{description,jdbcType=LONGVARCHAR}, #{descSignup,jdbcType=LONGVARCHAR}, #{descSurvey,jdbcType=LONGVARCHAR}, 
+      #{descPresent,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.bp.wei.model.Marketing">
+  <insert id="insertSelective" parameterType="com.bp.wei.model.MarketinginfoWithBLOBs">
     insert into ec1_marketing
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -108,6 +120,15 @@
       </if>
       <if test="description != null">
         description,
+      </if>
+      <if test="descSignup != null">
+        desc_signup,
+      </if>
+      <if test="descSurvey != null">
+        desc_survey,
+      </if>
+      <if test="descPresent != null">
+        desc_present,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -150,9 +171,18 @@
       <if test="description != null">
         #{description,jdbcType=LONGVARCHAR},
       </if>
+      <if test="descSignup != null">
+        #{descSignup,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descSurvey != null">
+        #{descSurvey,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descPresent != null">
+        #{descPresent,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bp.wei.model.Marketing">
+  <update id="updateByPrimaryKeySelective" parameterType="com.bp.wei.model.MarketinginfoWithBLOBs">
     update ec1_marketing
     <set>
       <if test="name != null">
@@ -191,10 +221,19 @@
       <if test="description != null">
         description = #{description,jdbcType=LONGVARCHAR},
       </if>
+      <if test="descSignup != null">
+        desc_signup = #{descSignup,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descSurvey != null">
+        desc_survey = #{descSurvey,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="descPresent != null">
+        desc_present = #{descPresent,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bp.wei.model.Marketing">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bp.wei.model.MarketinginfoWithBLOBs">
     update ec1_marketing
     set name = #{name,jdbcType=VARCHAR},
       date_entered = #{dateEntered,jdbcType=TIMESTAMP},
@@ -207,10 +246,13 @@
       ed_dt = #{edDt,jdbcType=DATE},
       market_st = #{marketSt,jdbcType=VARCHAR},
       market_fee = #{marketFee,jdbcType=DECIMAL},
-      description = #{description,jdbcType=LONGVARCHAR}
+      description = #{description,jdbcType=LONGVARCHAR},
+      desc_signup = #{descSignup,jdbcType=LONGVARCHAR},
+      desc_survey = #{descSurvey,jdbcType=LONGVARCHAR},
+      desc_present = #{descPresent,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=CHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.bp.wei.model.Marketing">
+  <update id="updateByPrimaryKey" parameterType="com.bp.wei.model.Marketinginfo">
     update ec1_marketing
     set name = #{name,jdbcType=VARCHAR},
       date_entered = #{dateEntered,jdbcType=TIMESTAMP},

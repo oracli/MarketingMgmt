@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bp.wei.model.Marketing;
+import com.bp.wei.model.Marketinginfo;
+import com.bp.wei.model.MarketinginfoWithBLOBs;
 import com.bp.wei.model.Member;
 import com.bp.wei.model.MemberinfoWithBLOBs;
 import com.bp.wei.model.Followerinfo;
@@ -66,19 +67,28 @@ public class MarketingMgmtController {
 	public String redirectSignupcancel(){	
 		return "signupcancel";
 	}
-	
 	//获得在用的营销活动
 	@RequestMapping(value="getMarketinglist", method = RequestMethod.GET)
-	public @ResponseBody Marketing findMarketinglist(){
+	public @ResponseBody Marketinginfo findMarketinglist(){
 		
-		Marketing result = memberService.getMarketinglist();
+		Marketinginfo result = memberService.getMarketinglist();
 		
 		System.out.println("@@@@@@@@@@@result: " + result.toString());
 		
 		return result;
-		
 	}
-	
+	//search marketing info
+	@RequestMapping(value="getmarketing", method = RequestMethod.GET)
+	public @ResponseBody MarketinginfoWithBLOBs findMarketing(String id){
+		log.debug("###########memberid: " + id);
+		if(id == null || id.length() == 0){
+			return null;
+		}
+		log.debug("###########memberid: " + id);
+		MarketinginfoWithBLOBs marketing = memberService.getMarketing(id);
+		log.debug("###########" + marketing.getName());
+		return marketing;
+	}	
 	//获取问题列表
 	@RequestMapping(value="getQuestionnaire", method = RequestMethod.GET)
 	public @ResponseBody Questionnaire getQuestionnaire(String id){
@@ -94,7 +104,6 @@ public class MarketingMgmtController {
 		System.out.println("@@@@@@@@@@@result: " + result.toString());
 		return result;
 	}
-	
 	//提交答案
 	@RequestMapping(value="submitSurvey", method = RequestMethod.POST)
 	public ModelAndView submitSurvey(HttpServletRequest request){	
