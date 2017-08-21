@@ -111,7 +111,7 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 		
 		String mkid = request.getParameter("mkname");
 		String surveryId = request.getParameter("sid");
-		String mbid = "2e48426f-a448-0b1c-2324-597f2ca95921";
+		String mbid = "ed354dcd-7980-11e7-9bd6-201a06c68160";
 		System.out.println("mkkkkkkkkkkkkkkkkk id: " + mkid);
 		
 		int i = 1;
@@ -179,16 +179,28 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 		
 		
 	}
-
 	
+	//get marketing info for sign in	
+	@Override
+	public MarketinginfoWithBLOBs getMarketingForSignin(String id){
+		System.out.println("@@@@@@@@@@@@@@marketing : " + id);
+		MarketinginfoWithBLOBs marketing = mkDao.selectMarketingInfoForSignin(id);
+		System.out.println("@@@@@@@@@@@@@@marketing : " + marketing.getId());
+		return marketing;
+	}
+	//save 体验  Data
+	@Override
+	public boolean setParticipateData(HttpServletRequest request) {
+		
+		String mkid = request.getParameter("mkname");
+		//String surveryId = request.getParameter("sid");
+		String mbid = "ed354dcd-7980-11e7-9bd6-201a06c68160";
+		System.out.println("mkkkkkkkkkkkkkkkkk id: " + mkid);
+		
+		return true;
+	}
 	
-	
-	
-	
-	
-	
-	
-	
+		
 	
 	////////////////for follower
 	

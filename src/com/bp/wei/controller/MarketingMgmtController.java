@@ -141,7 +141,33 @@ public class MarketingMgmtController {
 	}	
 	
 	
-	
+	//search marketing info for 签到
+	@RequestMapping(value="getmarketingforsignin", method = RequestMethod.GET)
+	public @ResponseBody MarketinginfoWithBLOBs findmMarketingForSignin(String id){
+		log.debug("###########memberid: " + id);
+		if(id == null || id.length() == 0){
+			return null;
+		}
+		log.debug("###########memberid: " + id);
+		MarketinginfoWithBLOBs marketing = marktingService.getMarketingForSignin(id);
+		log.debug("###########" + marketing.getName());
+		return marketing;
+	}
+	//提交签到
+	@RequestMapping(value="submitSignin", method = RequestMethod.POST)
+	public ModelAndView submitSignin(HttpServletRequest request){	
+		log.debug("submitSignin start...");
+		//String surveryId = request.getParameter("sid");
+		//System.out.println("survery id: " + surveryId);
+		int i = 1;
+		
+		boolean blResult = marktingService.setParticipateData(request);
+		
+		
+		ModelAndView result = new ModelAndView();
+		result.setViewName("marketingentry");		
+		return result;
+	}
 	
 	
 	

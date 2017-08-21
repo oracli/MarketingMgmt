@@ -20,6 +20,10 @@ public interface MarketingMgmtService {
 	
 	boolean setInteractionData(HttpServletRequest request);
 	
+	boolean setParticipateData(HttpServletRequest request);
+	
+	MarketinginfoWithBLOBs getMarketingForSignin(String id);
+	
 	
 	
 	///////////////////for follower

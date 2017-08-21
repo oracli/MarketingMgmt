@@ -31,6 +31,12 @@
   	</collection>
   </resultMap>
   
+  <resultMap id="ResultMapWithMarketingForSignin" type="com.bp.wei.model.MarketinginfoWithBLOBs">
+  	<id property="id" column="mid"/>
+  	<result property="name" column="mname"/>
+	<result property="assignedUserId" column="pid"/>
+  </resultMap>  
+  
   
   <select id="selecAllMarketingList" resultMap="ResultMapWithMarketingList">
     select '1', id mkid, name mkname
@@ -45,6 +51,15 @@
     from ec1_marketing
     where id = #{id,jdbcType=CHAR}
   </select>
+  
+  <select id="selectMarketingInfoForSignin" parameterType="java.lang.String" resultMap="ResultMapWithMarketingForSignin">
+    SELECT mk.id mid, mk.name mname, pt.id pid
+    FROM ec1_marketing mk, ec1_marketing_ec1_participate_c mktopt, ec1_participate pt
+   WHERE mk.id = mktopt.ec1_marketing_ec1_participateec1_marketing_ida
+     AND pt.id = mktopt.ec1_marketing_ec1_participateec1_participate_idb
+     AND pt.partic_type = 'L1'
+     AND mk.id = #{id,jdbcType=CHAR}
+  </select>  
 
   <sql id="Base_Column_List">
     id, name, date_entered, date_modified, modified_user_id, created_by, deleted, assigned_user_id, 

@@ -15,7 +15,7 @@
 
 	<body>
 
-		<form id="signinpage">
+		<form id="signinpage" method="post" action="submitSignin">
 		
 			<header class="ui-header ui-header-positive ui-border-b">
 
@@ -37,9 +37,9 @@
 
 				<div class="page__bd page__bd_spacing">
 					<div class="page-btn-area">
-						<a class="page-btn page-btn_primary" href="javascript:gobackmarktingindex()">签                      到</a>
+						<a class="page-btn page-btn_primary" href="javascript:submitSignin()">签                      到</a>
 						<input type="hidden" id="followid" name="followid" value="1" />
-						<input type="hidden" id="membertel" name="membertel" value="2" />
+						<input type="hidden" id="mkid" name="mkname" value="2" />
 					</div>
 				</div>
 
@@ -68,7 +68,7 @@
 					dataType: 'json',
 					　　　　　　contentType: 'application/json',
 					success: function(data) {
-						window.location.href = 'marketingindex';
+						window.location.href = 'marketingentry';
 					},
 					error: function(data) {
 						alert(data.msg);
@@ -93,7 +93,56 @@
 					}
 				});
 			}
+			
+			function getmarketing() {
+				var marketingid = document.getElementById('mkid').value;
+				var params = {
+					id: marketingid
+				};
 
+				$.ajax({
+					type: 'get',
+					url: 'getmarketingforsignin',
+					cache: false,
+					dataType: 'json',
+					data: params,
+					　　　　　　contentType: 'application/json',
+					　　　　　　async: false,
+					success: function(data) {
+					
+						//$("#marketing_title").val(data.name);
+						//$("#descsignup_id").val(data.assignedUserId);
+						alert(data.id);
+						alert(data.name);
+						alert(data.assignedUserId);
+
+					},
+					error: function(data) {
+						alert('failed:' + data.msg);
+					}
+				});
+			}			
+			
+			//for open form
+			jQuery.getUrlParam = function (name) {
+     			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+     			var r = window.location.search.substr(1).match(reg);
+     			if (r != null) return unescape(r[2]); return null;
+			}			
+			$(document).ready(function() {
+				
+				$("#mkid").val($.getUrlParam('mkid'));
+				
+				getmarketing();
+
+				//getSurvey();
+			});				
+
+			//签到处理
+			function submitSignin(){
+				
+				$('#signinpage').submit();
+			}
 
 		</script>
 	</body>

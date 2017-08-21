@@ -22,4 +22,7 @@ public interface MarketinginfoDao {
     Marketinginfo selecAllMarketingList();
     
     MarketinginfoWithBLOBs selectMarketingInfo(String id);
+    
+    MarketinginfoWithBLOBs selectMarketingInfoForSignin(String id);
+    
 }
