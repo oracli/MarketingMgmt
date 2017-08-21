@@ -31,7 +31,7 @@ public class MarketingMgmtController {
 	public static Logger log = LoggerFactory.getLogger(MarketingMgmtController.class);
 	
 	@Autowired
-	MarketingMgmtService memberService;
+	MarketingMgmtService  marktingService;
 	//营销活动入口
 	@RequestMapping(value="marketingentry", method = RequestMethod.GET)
 	public String redirectGomarketingentry(){		
@@ -71,7 +71,7 @@ public class MarketingMgmtController {
 	@RequestMapping(value="getMarketinglist", method = RequestMethod.GET)
 	public @ResponseBody Marketinginfo findMarketinglist(){
 		
-		Marketinginfo result = memberService.getMarketinglist();
+		Marketinginfo result = marktingService.getMarketinglist();
 		
 		System.out.println("@@@@@@@@@@@result: " + result.toString());
 		
@@ -85,7 +85,7 @@ public class MarketingMgmtController {
 			return null;
 		}
 		log.debug("###########memberid: " + id);
-		MarketinginfoWithBLOBs marketing = memberService.getMarketing(id);
+		MarketinginfoWithBLOBs marketing = marktingService.getMarketing(id);
 		log.debug("###########" + marketing.getName());
 		return marketing;
 	}	
@@ -96,7 +96,7 @@ public class MarketingMgmtController {
 			log.error("Invalid questionnaire id from UI.");
 			return null;
 		}
-		Questionnaire result = memberService.getQuestionnaireById(id);
+		Questionnaire result = marktingService.getQuestionnaireById(id);
 		if(result == null){
 			log.error("No questionnaire definition.");
 			return null;
@@ -111,18 +111,28 @@ public class MarketingMgmtController {
 		String surveryId = request.getParameter("sid");
 		System.out.println("survery id: " + surveryId);
 		int i = 1;
+		
+
 		boolean hasnext = true;
 		while(hasnext){
 			String questionId = request.getParameter("qid_" + i);
 			System.out.println("question id: " + questionId);
 			if(questionId != null && questionId.length() > 0){
 				String answer = request.getParameter(questionId);
-				System.out.println("answer id: " + answer);
+				System.out.println("answer id:。。。。。。。。。。 " + answer);
 				i ++;
 			}else{
 				hasnext = false;
 			}
 		}
+		
+		
+		//if(hasnext){
+			
+			boolean blResult = marktingService.setInteractionData(request);
+		//}
+		
+
 		ModelAndView result = new ModelAndView();
 		
 		result.setViewName("msg_success");		
@@ -204,7 +214,7 @@ public class MarketingMgmtController {
 	@RequestMapping(value="getmember", method = RequestMethod.GET)
 	public @ResponseBody Member findMember(int id){
 		
-		return memberService.getMemberById(new Integer(id));
+		return marktingService.getMemberById(new Integer(id));
 		
 	}
 	
@@ -228,7 +238,7 @@ public class MarketingMgmtController {
 		member.setGender("F");
 		member.setBirthday("2017-01-01");
 		
-		int result = memberService.setMember(member);		
+		int result = marktingService.setMember(member);		
 		
 		return result;		
 	}
@@ -242,7 +252,7 @@ public class MarketingMgmtController {
 			return null;
 		}
 		log.debug("###########memberid: " + id);
-		Followerinfo followerinfo = memberService.getFollowerlist(id);
+		Followerinfo followerinfo = marktingService.getFollowerlist(id);
 		log.debug("###########" + followerinfo.toString());
 		return followerinfo;
 	}
@@ -302,7 +312,7 @@ public class MarketingMgmtController {
 		Followerinfo followerinfo = new Followerinfo();
 		followerinfo.setId(strMemberinfo.getString("followid"));
 		
-		int result = memberService.insertMemberinfo(memberinfo, strMemberinfo.getString("followid"));
+		int result = marktingService.insertMemberinfo(memberinfo, strMemberinfo.getString("followid"));
 		
 		System.out.println("@@@@@@@@@@@@@@result: " + result);
 		return result;		
@@ -312,7 +322,7 @@ public class MarketingMgmtController {
 	@RequestMapping(value="getmemberinfo", method = RequestMethod.GET)
 	public @ResponseBody MemberinfoWithBLOBs findMemberinfo(String name){
 		
-		return memberService.getMemberinfobyname(new String(name));
+		return marktingService.getMemberinfobyname(new String(name));
 		
 	}
 	//update member 
@@ -372,7 +382,7 @@ public class MarketingMgmtController {
 		}
 		
 		
-		int result = memberService.updateMemberinfo(memberinfo);
+		int result = marktingService.updateMemberinfo(memberinfo);
 		
 		System.out.println("@@@@@@@@@@@@@@result: " + result);
 		return result;	
@@ -405,7 +415,7 @@ public class MarketingMgmtController {
 			follow.setName("openid-" + flname);
 		}
 				
-		String flid = memberService.getTestFollowerinfo(follow);
+		String flid = marktingService.getTestFollowerinfo(follow);
 		
 		params.put("id", flid);
 		JSONObject result = JSONObject.fromObject(params);

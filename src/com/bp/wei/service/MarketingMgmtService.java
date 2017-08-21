@@ -1,11 +1,12 @@
 package com.bp.wei.service;
 
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.bp.wei.model.Followerinfo;
 import com.bp.wei.model.Marketinginfo;
 import com.bp.wei.model.MarketinginfoWithBLOBs;
 import com.bp.wei.model.Member;
-import com.bp.wei.model.Memberinfo;
 import com.bp.wei.model.MemberinfoWithBLOBs;
 import com.bp.wei.model.Questionnaire;
 
@@ -16,6 +17,8 @@ public interface MarketingMgmtService {
 	MarketinginfoWithBLOBs getMarketing(String id);
 	
 	Questionnaire getQuestionnaireById(String id);
+	
+	boolean setInteractionData(HttpServletRequest request);
 	
 	
 	

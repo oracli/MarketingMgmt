@@ -23,7 +23,7 @@
 				<i class="ui-icon-return" onclick="history.back()"></i>
 				
 				<div class="ui-row">
- 					<div class="ui-col ui-col-80"><h1><input readonly="readonly" id="membertel" style="border:0; background:none; color:#999; vertical-align:middle;" value="国庆免费试听活动" /></h1></div>
+ 					<div class="ui-col ui-col-80"><h1><input readonly="readonly" id="marketing_title" style="border:0; background:none; color:#FFFFFF; text-align:center" value="免费试听活动" /></h1></div>
     				<div class="ui-col ui-col-20"><a href="javascript:gomarketingentry();"><div class="ui-badge-muted">回首页</div></a></div>		    			
     			</div>
 	
@@ -34,7 +34,7 @@
 
 				<div class="weui-cells weui-cells_form">
 					
-					<textarea id="descsignup_id" name="descsignup_nm" cols="50" rows="4" readonly="readonly" style= "background:transparent;border-style:none; resize: none;"></textarea>
+					<textarea id="desc_id" name="desc_nm" cols="50" rows="4" readonly="readonly" style= "background:transparent;border-style:none; resize: none;"></textarea>
 			
 	
 				</div>
@@ -110,7 +110,8 @@
 					　　　　　　async: false,
 					success: function(data) {
 					
-						$("#descsignup_id").val(data.descSignup);
+						$("#marketing_title").val(data.name);
+						$("#desc_id").val(data.description);
 
 					},
 					error: function(data) {
@@ -163,6 +164,8 @@
 					
 			//进入调查问卷页面
 			function gosignupsurvey() {
+			
+				var mkid = document.getElementById('mkid').value;
 
 				$.ajax({
 					type: 'get',
@@ -172,7 +175,7 @@
 					dataType: 'json',
 					　　　　　　contentType: 'application/json',
 					success: function(data) {
-						window.location.href = 'signupsurvey';
+						window.location.href = 'signupsurvey.html?mkid=' + mkid;
 					},
 					error: function(data) {
 						alert(data.msg);

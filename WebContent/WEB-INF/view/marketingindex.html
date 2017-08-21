@@ -17,7 +17,7 @@
 	<body>
 	    <form id="marketingindex" method="post">
 			<header class="ui-header ui-header-positive ui-border-b">
-				<h1>国庆免费试听活动</h1>
+				<h1><input readonly="readonly" id="marketing_title" style="border:0; background:none; color:#FFFFFF; text-align:center" value="免费试听活动" /></h1>
 			</header>
 			<br />
 			<br />
@@ -87,6 +87,62 @@
 		
 		
 		<script type="text/javascript">
+		
+			//search data
+			$.fn.parseTemplate = function(data) {
+				var str = (this).html();
+				var _tmplCache = {}
+				var err = "";
+				try {
+					var func = _tmplCache[str];
+					if(!func) {
+						var strFunc =
+							"var p=[],print=function(){p.push.apply(p,arguments);};" +
+							"with(obj){p.push('" +
+							str.replace(/[\r\t\n]/g, " ")
+							.replace(/'(?=[^#]*#>)/g, "\t")
+							.split("'").join("\\'")
+							.split("\t").join("'")
+							.replace(/<#=(.+?)#>/g, "',$1,'")
+							.split("<#").join("');")
+							.split("#>").join("p.push('") +
+							"');}return p.join('');";
+						func = new Function("obj", strFunc);
+						_tmplCache[str] = func;
+					}
+					return func(data);
+				} catch(e) {
+					err = e.message;
+				}
+				return "< # ERROR: " + err.toString() + " # >";
+			};
+
+			function getmarketing() {
+				var marketingid = document.getElementById('mkid').value;
+				var params = {
+					id: marketingid
+				};
+
+				$.ajax({
+					type: 'get',
+					url: 'getmarketing',
+					cache: false,
+					dataType: 'json',
+					data: params,
+					　　　　　　contentType: 'application/json',
+					　　　　　　async: false,
+					success: function(data) {
+					
+						$("#marketing_title").val(data.name);
+						$("#descsignup_id").val(data.description);
+
+					},
+					error: function(data) {
+						alert('failed:' + data.msg);
+					}
+				});
+			}		
+		
 			//活动报名
 			function marketingsignup() {
 			
@@ -171,6 +227,8 @@
 			$(document).ready(function() {
 				
 				$("#mkid").val($.getUrlParam('mkid'));
+				
+				getmarketing();
 
 			});	
 		</script>

@@ -1,23 +1,35 @@
 package com.bp.wei.service.impl;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.bp.wei.dao.InteracDataToInteracAnswerDao;
+import com.bp.wei.dao.InteracDataToInteracDao;
+import com.bp.wei.dao.InteracDataToInteracTypeDao;
+import com.bp.wei.dao.InteracDataToMemberDao;
+import com.bp.wei.dao.InteractionDataDao;
 import com.bp.wei.dao.MarketinginfoDao;
 import com.bp.wei.dao.MemberDao;
+import com.bp.wei.dao.MemberToInteractionDao;
 import com.bp.wei.dao.MemberinfoDao;
 import com.bp.wei.dao.FollowerinfoDao;
 import com.bp.wei.dao.MemberToFollowerDao;
 import com.bp.wei.dao.QuestionnaireDao;
 import com.bp.wei.model.Followerinfo;
+import com.bp.wei.model.InteracDataToInterac;
+import com.bp.wei.model.InteracDataToInteracAnswer;
+import com.bp.wei.model.InteracDataToInteracType;
+import com.bp.wei.model.InteracDataToMember;
+import com.bp.wei.model.InteractionData;
 import com.bp.wei.model.Marketinginfo;
 import com.bp.wei.model.MarketinginfoWithBLOBs;
 import com.bp.wei.model.Member;
 import com.bp.wei.model.MemberToFollower;
-import com.bp.wei.model.Memberinfo;
+import com.bp.wei.model.MemberToInteraction;
 import com.bp.wei.model.MemberinfoWithBLOBs;
 import com.bp.wei.model.Questionnaire;
 import com.bp.wei.service.MarketingMgmtService;
@@ -26,7 +38,6 @@ import com.bp.wei.service.MarketingMgmtService;
 public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 	
 	public static Logger log = LoggerFactory.getLogger(MarketingMgmtService.class);
-	
 	
 	@Resource
 	private MemberinfoDao mbdao;
@@ -41,10 +52,34 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 	private QuestionnaireDao qDao;
 	
 	@Resource
-	private MarketinginfoDao mkDao;
+	private MarketinginfoDao mkDao;	
+	
+	//保存互动结果
+	@Resource
+	private InteractionDataDao idDao;
+	
+	@Resource
+	private InteracDataToInteracAnswerDao idTarDao;
+	
+	@Resource
+	private InteracDataToInteracTypeDao idTtyDao;
+	
+	@Resource
+	private InteracDataToInteracDao idTitDao;
+	
+	@Resource
+	private InteracDataToMemberDao idTmbDao;
+	
+	@Resource
+	private MemberToInteractionDao mbTitDao;	
+	
+	//保存体验结果
 	
 	
-	//search
+	
+	
+	
+	//search 
 	@Override
 	public Marketinginfo getMarketinglist() {
 		Marketinginfo marketing = mkDao.selecAllMarketingList();
@@ -70,9 +105,83 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 		return questionnaire;
 	}	
 
-	
-	
+	//save Interaction Data
+	@Override
+	public boolean setInteractionData(HttpServletRequest request) {
+		
+		String mkid = request.getParameter("mkname");
+		String surveryId = request.getParameter("sid");
+		String mbid = "2e48426f-a448-0b1c-2324-597f2ca95921";
+		System.out.println("mkkkkkkkkkkkkkkkkk id: " + mkid);
+		
+		int i = 1;
+		boolean hasnext = true;
+		while(hasnext){
+			String questionId = request.getParameter("qid_" + i);
+			System.out.println("question id: " + questionId);
+			if(questionId != null && questionId.length() > 0){
+				String answer = request.getParameter(questionId);
+				System.out.println("answer id:。。。。。。。。。。 " + answer);
+				
+				//insert Interaction Data
+				InteractionData iddata = new InteractionData();
+				iddata.setName("互动资料");
+				
+				int result = idDao.insertInteractionData(iddata);
+				
+				String interactionDataID = iddata.getId();
+				System.out.println("interactionData id:。。。。。。。。。。 " + interactionDataID);
+				
+				//Interaction Data 关联 问卷答案
+				InteracDataToInteracAnswer idTar = new InteracDataToInteracAnswer();
+				idTar.setEc1InteractionDataEc1InteractionAskec1InteractionDataIdb(interactionDataID);
+				idTar.setEc1InteractionDataEc1InteractionAskec1InteractionAskIda(answer);				
+				
+				result = idTarDao.insertInteractionDataToAnswer(idTar);
+				
+				//Interaction Data 关联 问卷问题
+				InteracDataToInteracType idTty = new InteracDataToInteracType();
+				idTty.setEc1Intera3de5onDataIdb(interactionDataID);
+				idTty.setEc1Interab268onTypeIda(questionId);				
+				
+				result = idTtyDao.insertInteractionDataToQuestion(idTty);
+				
+				//Interaction Data 关联 问卷
+				InteracDataToInterac idTit = new InteracDataToInterac();
+				idTit.setEc1InteractionDataEc1Interactionec1InteractionDataIdb(interactionDataID);
+				idTit.setEc1InteractionDataEc1Interactionec1InteractionIda(surveryId);	
+				
+				result = idTitDao.insertInteractionDataToInteraction(idTit);
+				
+				//Interaction Data 关联 会员
+				InteracDataToMember idTmb = new InteracDataToMember();
+				idTmb.setEc1InteractionDataEc1Memberec1InteractionDataIdb(interactionDataID);
+				idTmb.setEc1InteractionDataEc1Memberec1MemberIda(mbid);	
+				
+				result = idTmbDao.insertInteractionDataToMember(idTmb);
+				
+				i ++;
+			}else{
+				hasnext = false;
+			}
+		}
+		
+		//会员 关联 互动（参与此互动的会员清单）
+		MemberToInteraction mbTit = new MemberToInteraction();
+		mbTit.setEc1MemberEc1Interactionec1MemberIdb(mbid);
+		mbTit.setEc1MemberEc1Interactionec1InteractionIda(surveryId);			
+		
+		int result = mbTitDao.insertMemberToInteraction(mbTit);
+		
+		
+		
+		return true;
+		
+		
+	}
 
+	
+	
 	
 	
 	
