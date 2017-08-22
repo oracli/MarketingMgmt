@@ -157,9 +157,14 @@ public class MarketingMgmtController {
 	@RequestMapping(value="submitSignin", method = RequestMethod.POST)
 	public ModelAndView submitSignin(HttpServletRequest request){	
 		log.debug("submitSignin start...");
-		//String surveryId = request.getParameter("sid");
-		//System.out.println("survery id: " + surveryId);
-		int i = 1;
+		String marketingId = request.getParameter("mkname");
+		System.out.println("marketing................... id: " + marketingId);
+		
+		String memberId = request.getParameter("mbname");
+		System.out.println("member................... id: " + memberId);
+		
+		String particId = request.getParameter("particname");
+		System.out.println("partic................... id: " + particId);		
 		
 		boolean blResult = marktingService.setParticipateData(request);
 		

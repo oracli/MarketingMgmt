@@ -1,7 +1,5 @@
 package com.bp.wei.model;
 
-import java.util.List;
-
 public class Member {
 	
 	private String id;

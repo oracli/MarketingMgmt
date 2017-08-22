@@ -18,6 +18,7 @@ import com.bp.wei.dao.MemberToInteractionDao;
 import com.bp.wei.dao.MemberinfoDao;
 import com.bp.wei.dao.FollowerinfoDao;
 import com.bp.wei.dao.MemberToFollowerDao;
+import com.bp.wei.dao.ParticipateDataDao;
 import com.bp.wei.dao.QuestionnaireDao;
 import com.bp.wei.model.Followerinfo;
 import com.bp.wei.model.InteracDataToInterac;
@@ -30,7 +31,11 @@ import com.bp.wei.model.MarketinginfoWithBLOBs;
 import com.bp.wei.model.Member;
 import com.bp.wei.model.MemberToFollower;
 import com.bp.wei.model.MemberToInteraction;
+import com.bp.wei.model.MemberToParticipate;
 import com.bp.wei.model.MemberinfoWithBLOBs;
+import com.bp.wei.model.ParticDataToMember;
+import com.bp.wei.model.ParticDataToPartic;
+import com.bp.wei.model.ParticDataToParticType;
 import com.bp.wei.model.Questionnaire;
 import com.bp.wei.service.MarketingMgmtService;
 
@@ -74,10 +79,20 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 	private MemberToInteractionDao mbTitDao;	
 	
 	//保存体验结果
+	@Resource
+	private ParticipateDataDao pdDao;
 	
+	@Resource
+	private ParticDataToParticType pdTptDao;
 	
+	@Resource
+	private ParticDataToPartic pdTpcDao;
 	
+	@Resource
+	private ParticDataToMember pdTmbDao;
 	
+	@Resource
+	private MemberToParticipate mbTpcDao;
 	
 	//search 
 	@Override
@@ -173,10 +188,7 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 		
 		int result = mbTitDao.insertMemberToInteraction(mbTit);
 		
-		
-		
 		return true;
-		
 		
 	}
 	
@@ -202,9 +214,20 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 	
 		
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	////////////////for follower
-	
-	
 	@Override
 	public int setMember(Member member) {
 		int result = dao.insertSelective(member);

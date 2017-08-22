@@ -22,8 +22,8 @@
 				<i class="ui-icon-return" onclick="history.back()"></i>
 				
 				<div class="ui-row">
- 					<div class="ui-col ui-col-80"><h1>活动签到</h1></div>
-    				<div class="ui-col ui-col-20"><a href="javascript:gomarketingentry();"><div class="ui-badge-muted">回首页</div></a></div>		    			
+ 					<div class="ui-col ui-col-80"><h1><input readonly="readonly" id="marketing_title" style="border:0; background:none; color:#FFFFFF; text-align:center" value="免费试听活动" /></h1></div>
+    				<div class="ui-col ui-col-20"><a href="javascript:gomarketingentry();"><div class="ui-badge-muted">回首页</div></a></div>			    			
     			</div>
 
 			</header>
@@ -38,8 +38,9 @@
 				<div class="page__bd page__bd_spacing">
 					<div class="page-btn-area">
 						<a class="page-btn page-btn_primary" href="javascript:submitSignin()">签                      到</a>
-						<input type="hidden" id="followid" name="followid" value="1" />
+						<input type="hidden" id="mbid" name="mbname" value="8e795f1f-7980-11e7-9bd6-201a06c68160" />
 						<input type="hidden" id="mkid" name="mkname" value="2" />
+						<input type="hidden" id="particid" name="particname" value="2" />
 					</div>
 				</div>
 
@@ -110,11 +111,10 @@
 					　　　　　　async: false,
 					success: function(data) {
 					
-						//$("#marketing_title").val(data.name);
-						//$("#descsignup_id").val(data.assignedUserId);
-						alert(data.id);
-						alert(data.name);
-						alert(data.assignedUserId);
+						$("#marketing_title").val(data.name + "签到");
+						$("#mkid").val(data.id);
+						$("#particid").val(data.assignedUserId);
+
 
 					},
 					error: function(data) {
