@@ -14,4 +14,6 @@ public interface ParticDataToParticDao {
     int updateByPrimaryKeySelective(ParticDataToPartic record);
 
     int updateByPrimaryKey(ParticDataToPartic record);
+    
+    int insertParticDataToPartic(ParticDataToPartic record);
 }

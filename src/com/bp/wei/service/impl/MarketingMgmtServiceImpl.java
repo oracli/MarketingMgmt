@@ -15,9 +15,14 @@ import com.bp.wei.dao.InteractionDataDao;
 import com.bp.wei.dao.MarketinginfoDao;
 import com.bp.wei.dao.MemberDao;
 import com.bp.wei.dao.MemberToInteractionDao;
+import com.bp.wei.dao.MemberToParticipateDao;
 import com.bp.wei.dao.MemberinfoDao;
 import com.bp.wei.dao.FollowerinfoDao;
 import com.bp.wei.dao.MemberToFollowerDao;
+import com.bp.wei.dao.ParticDataToMemberDao;
+import com.bp.wei.dao.ParticDataToParticDao;
+import com.bp.wei.dao.ParticDataToParticTypeDao;
+import com.bp.wei.dao.ParticipateDao;
 import com.bp.wei.dao.ParticipateDataDao;
 import com.bp.wei.dao.QuestionnaireDao;
 import com.bp.wei.model.Followerinfo;
@@ -36,6 +41,8 @@ import com.bp.wei.model.MemberinfoWithBLOBs;
 import com.bp.wei.model.ParticDataToMember;
 import com.bp.wei.model.ParticDataToPartic;
 import com.bp.wei.model.ParticDataToParticType;
+import com.bp.wei.model.Participate;
+import com.bp.wei.model.ParticipateData;
 import com.bp.wei.model.Questionnaire;
 import com.bp.wei.service.MarketingMgmtService;
 
@@ -80,19 +87,22 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 	
 	//保存体验结果
 	@Resource
+	private ParticipateDao pcDao;	
+	
+	@Resource
 	private ParticipateDataDao pdDao;
 	
 	@Resource
-	private ParticDataToParticType pdTptDao;
+	private ParticDataToParticTypeDao pdTptDao;
 	
 	@Resource
-	private ParticDataToPartic pdTpcDao;
+	private ParticDataToParticDao pdTpcDao;
 	
 	@Resource
-	private ParticDataToMember pdTmbDao;
+	private ParticDataToMemberDao pdTmbDao;
 	
 	@Resource
-	private MemberToParticipate mbTpcDao;
+	private MemberToParticipateDao mbTpcDao;
 	
 	//search 
 	@Override
@@ -204,16 +214,56 @@ public class MarketingMgmtServiceImpl implements MarketingMgmtService {
 	@Override
 	public boolean setParticipateData(HttpServletRequest request) {
 		
-		String mkid = request.getParameter("mkname");
-		//String surveryId = request.getParameter("sid");
-		String mbid = "ed354dcd-7980-11e7-9bd6-201a06c68160";
-		System.out.println("mkkkkkkkkkkkkkkkkk id: " + mkid);
+		String marketingId = request.getParameter("mkname");		
+		String memberId = request.getParameter("mbname");
+		String particId = request.getParameter("particname");
+
+		//get participate type
+		String particTypeId = pcDao.selectParticipateInfo(particId);
+		System.out.println("@@@@@@@@@@@@@@ Participate type ID : " + particTypeId);
 		
+		//insert participate data
+		ParticipateData pddata = new ParticipateData();
+		pddata.setName("体验资料");
+		
+		int result = pdDao.insertParticipateData(pddata);	
+		String particDataId = pddata.getId();
+		System.out.println("@@@@@@@@@@@@@@ Participate data ID : " + particDataId);
+		
+		//participate Data 关联  participate type
+		ParticDataToParticType pdTpt = new ParticDataToParticType();
+		pdTpt.setEc1Partic0cbeteTypeIda(particTypeId);
+		pdTpt.setEc1Partic180eteDataIdb(particDataId);				
+		
+		result = pdTptDao.insertParticDataToParticType(pdTpt);
+		
+		//participate Data 关联  participate 
+		ParticDataToPartic pdTpc = new ParticDataToPartic();
+		pdTpc.setEc1ParticipateDataEc1Participateec1ParticipateIda(particId);
+		pdTpc.setEc1ParticipateDataEc1Participateec1ParticipateDataIdb(particDataId);				
+		
+		result = pdTpcDao.insertParticDataToPartic(pdTpc);		
+		
+		//participate Data 关联  member
+		ParticDataToMember pdTmb = new ParticDataToMember();
+		pdTmb.setEc1ParticipateDataEc1Memberec1MemberIda(memberId);
+		pdTmb.setEc1ParticipateDataEc1Memberec1ParticipateDataIdb(particDataId);				
+		
+		result = pdTmbDao.insertParticDataToMember(pdTmb);		
+		
+		//member 关联  participate 
+		MemberToParticipate mbTpc = new MemberToParticipate();
+		mbTpc.setEc1MemberEc1Participateec1ParticipateIda(particId);
+		mbTpc.setEc1MemberEc1Participateec1MemberIdb(memberId);				
+		
+		result = mbTpcDao.insertMemberToParticipate(mbTpc);		
+		 
+		 
 		return true;
 	}
 	
 		
-	
+	 
 	
 	
 	

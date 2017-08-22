@@ -14,4 +14,6 @@ public interface MemberToParticipateDao {
     int updateByPrimaryKeySelective(MemberToParticipate record);
 
     int updateByPrimaryKey(MemberToParticipate record);
+    
+    int insertMemberToParticipate(MemberToParticipate record);
 }

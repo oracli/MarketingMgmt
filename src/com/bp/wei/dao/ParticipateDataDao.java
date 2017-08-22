@@ -16,4 +16,6 @@ public interface ParticipateDataDao {
     int updateByPrimaryKeyWithBLOBs(ParticipateData record);
 
     int updateByPrimaryKey(ParticipateData record);
+    
+    int insertParticipateData(ParticipateData pddata);
 }

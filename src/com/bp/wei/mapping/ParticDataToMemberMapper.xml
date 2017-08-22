@@ -21,6 +21,18 @@
     delete from ec1_participate_data_ec1_member_c
     where id = #{id,jdbcType=VARCHAR}
   </delete>
+  
+  
+  <insert id="insertParticDataToMember" parameterType="com.bp.wei.model.ParticDataToMember">
+    insert into ec1_participate_data_ec1_member_c (id, date_modified, deleted, 
+      ec1_participate_data_ec1_memberec1_member_ida, ec1_participate_data_ec1_memberec1_participate_data_idb
+      )
+    values (uuid(), now(), "0",
+      #{ec1ParticipateDataEc1Memberec1MemberIda,jdbcType=VARCHAR}, #{ec1ParticipateDataEc1Memberec1ParticipateDataIdb,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  
   <insert id="insert" parameterType="com.bp.wei.model.ParticDataToMember">
     insert into ec1_participate_data_ec1_member_c (id, date_modified, deleted, 
       ec1_participate_data_ec1_memberec1_member_ida, ec1_participate_data_ec1_memberec1_participate_data_idb
